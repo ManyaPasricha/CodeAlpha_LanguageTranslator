@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Language Translator</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #e0eafc, #cfdef3);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 40px;
+    }
+
+    .container {
+      background: #000000;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+      max-width: 700px;
+      width: 100%;
+    }
+
+    h2 {
+      text-align: center;
+      color: #ef1616d8;
+      margin-bottom: 20px;
+    }
+
+    textarea, select {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+      resize: vertical;
+    }
+
+    button {
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-right: 10px;
+      margin-top: 15px;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .output {
+      margin-top: 30px;
+      background: #f9f9f9;
+      padding: 20px;
+      border-radius: 10px;
+      border-left: 5px solid #4caf50;
+    }
+
+    label {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Language Translator</h2>
+    <form method="POST">
+      <label>Enter Text:</label>
+      <textarea name="text" rows="4" placeholder="Type something..." required></textarea>
+
+      <label>From Language:</label>
+      <select name="src_lang">
+        <option value="en">English</option>
+        <option value="hi">Hindi</option>
+        <option value="fr">French</option>
+        <option value="es">Spanish</option>
+        <option value="de">German</option>
+      </select>
+
+      <label>To Language:</label>
+      <select name="tgt_lang" id="tgt_lang">
+        <option value="hi">Hindi</option>
+        <option value="en">English</option>
+        <option value="fr">French</option>
+        <option value="es">Spanish</option>
+        <option value="de">German</option>
+      </select>
+
+      <button type="submit">Translate</button>
+    </form>
+
+    {% if translated_text %}
+    <div class="output">
+      <h3>Translated Text:</h3>
+      <p id="translated">{{ translated_text }}</p>
+      <button onclick="copyText()">Copy</button>
+      <button onclick="speakText()">Speak</button>
+    </div>
+    {% endif %}
+  </div>
+
+  <script>
+    function copyText() {
+      const text = document.getElementById("translated").innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Copied!");
+      });
+    }
+
+    function speakText() {
+      const text = document.getElementById("translated").innerText;
+      const langMap = {
+        "en": "en-US",
+        "hi": "hi-IN",
+        "fr": "fr-FR",
+        "es": "es-ES",
+        "de": "de-DE"
+      };
+      const langSelect = document.getElementById("tgt_lang");
+      const langCode = langSelect.value;
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = langMap[langCode] || "en-US";
+      window.speechSynthesis.speak(utterance);
+    }
+  </script>
+</body>
+</html>
